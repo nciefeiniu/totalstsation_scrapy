@@ -93,7 +93,7 @@ class TotalSpider(SplashRedisCrawlSpider):
             return
 
         # 保存当前页面的信息, items
-        yield self.save_info(response)
+        # yield self.save_info(response)
 
         # 这是带点击事件请求的回调
         _bae_url = response.meta['baseurl']
@@ -135,7 +135,7 @@ class TotalSpider(SplashRedisCrawlSpider):
             return
 
         # 保存信息
-        yield self.save_info(response)
+        # yield self.save_info(response)
 
         # 再次请求，点击下一页
         yield self._re_request_next_page(url=response.url, md_5=get_md5(response.body), script=response.meta['jsfunc'])
@@ -160,5 +160,7 @@ class TotalSpider(SplashRedisCrawlSpider):
         _items['domain_name'] = urlparse(response.url).netloc
 
         _items['page_title'] = response.xpath('//title//text()').get() if response.xpath('//title//text()') else ''
+
+        _items['page_body'] = response.xpath('//body//text()').get() if response.xpath('//body//text()') else ''
 
         return _items

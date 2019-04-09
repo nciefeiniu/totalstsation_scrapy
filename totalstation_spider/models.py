@@ -45,6 +45,7 @@ class PageInfo(Base):
     contenttype = Column(String)  # 内容的类型
     domain_name = Column(String)  # 域名
     page_title = Column(String)  # 页面的title信息
+    page_body = Column(String)  # 页面body部分信息
 
     __table_args__ = (
         UniqueConstraint('currenturl', 'contentmd5'),  # 唯一索引

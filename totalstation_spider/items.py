@@ -19,3 +19,5 @@ class TotalstationSpiderItem(scrapy.Item):
     contenttype = scrapy.Field()  # 内容的类型
     domain_name = scrapy.Field()  # 域名
     page_title = scrapy.Field()  # 页面的title
+    page_body = scrapy.Field()  # 页面的body部分
+
