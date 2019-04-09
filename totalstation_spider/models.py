@@ -22,8 +22,8 @@ dbhost = envget('PSQL_HOST')  # ,"192.168.1.156"
 dbport = envget('PSQL_PORT')  # ,"5433"
 dbname = envget('PSQL_DATABASE')
 # echo=True 显示信息
-print('postgresql+psycopg2://%s:%s@%s:%s/%s' % (dbuser, dbpassword, dbhost, dbport, dbname))
-engine = create_engine('postgresql+psycopg2://%s:%s@%s:%s/%s' % (dbuser, dbpassword, dbhost, dbport, dbname),
+print('mysql+pymysql://%s:%s@%s:%s/%s' % (dbuser, dbpassword, dbhost, dbport, dbname))
+engine = create_engine('mysql+pymysql://%s:%s@%s:%s/%s' % (dbuser, dbpassword, dbhost, dbport, dbname),
                        echo=False)
 
 Session = sessionmaker(bind=engine)

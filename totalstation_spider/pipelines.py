@@ -18,7 +18,7 @@ class TotalstationSpiderPipeline(object):
             if 'gov.cn' not in item['currenturl']:
                 return
             existence = self.session.query(
-                exists().where(PageInfo.contentmd5==item['contentmd5'])
+                exists().where(PageInfo.currenturl==item['currenturl'])
             ).scalar()
             if not existence:
                 # 不存在

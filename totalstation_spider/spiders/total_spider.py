@@ -5,9 +5,6 @@
 import re
 import sys
 
-# 修改递归上限
-sys.setrecursionlimit(100000)
-
 from datetime import datetime
 from urllib.parse import urlparse
 from bs4 import BeautifulSoup as BS
@@ -18,6 +15,9 @@ from scrapy_splash import SplashRequest
 from ..utils import SplashRedisCrawlSpider
 from ..utils import default_process_link, default_script, js_click_function
 from ..utils import get_md5
+
+# 修改递归上限
+sys.setrecursionlimit(100000)
 
 
 class TotalSpider(SplashRedisCrawlSpider):
