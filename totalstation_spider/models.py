@@ -37,7 +37,7 @@ class PageInfo(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     baseurl = Column(String)  # 基础url
-    currenturl = Column(String)  # 当前的url
+    currenturl = Column(String, unique=True)  # 当前的url
     prevfetchtime = Column(DateTime)  # 上次下载时间
     fetchtime = Column(DateTime, default=datetime.now, onupdate=datetime.now)  # 下载时间
     content = Column(Text)  # 内容
@@ -47,9 +47,9 @@ class PageInfo(Base):
     page_title = Column(String)  # 页面的title信息
     page_body = Column(String)  # 页面body部分信息
 
-    __table_args__ = (
-        UniqueConstraint('currenturl', 'contentmd5'),  # 唯一索引
-    )
+    # __table_args__ = (
+    #     UniqueConstraint('currenturl', 'contentmd5'),  # 唯一索引
+    # )
 
 
 def init_db():
