@@ -36,20 +36,16 @@ class PageInfo(Base):
     __tablename__ = 'webpageinfo'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    baseurl = Column(String)  # 基础url
-    currenturl = Column(String, unique=True)  # 当前的url
+    baseurl = Column(String(128))  # 基础url
+    currenturl = Column(String(512), unique=True)  # 当前的url
     prevfetchtime = Column(DateTime)  # 上次下载时间
     fetchtime = Column(DateTime, default=datetime.now, onupdate=datetime.now)  # 下载时间
     content = Column(Text)  # 内容
-    contentmd5 = Column(String)  # 内容的md5值
-    contenttype = Column(String)  # 内容的类型
-    domain_name = Column(String)  # 域名
-    page_title = Column(String)  # 页面的title信息
-    page_body = Column(String)  # 页面body部分信息
-
-    # __table_args__ = (
-    #     UniqueConstraint('currenturl', 'contentmd5'),  # 唯一索引
-    # )
+    contentmd5 = Column(String(64))  # 内容的md5值
+    contenttype = Column(String(32))  # 内容的类型
+    domain_name = Column(String(32))  # 域名
+    page_title = Column(String(256))  # 页面的title信息
+    page_body = Column(Text)  # 页面body部分信息
 
 
 def init_db():

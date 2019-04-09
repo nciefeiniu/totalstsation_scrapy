@@ -25,13 +25,14 @@ class TotalstationSpiderPipeline(object):
                     PageInfo(baseurl=item['baseurl'], currenturl=item['currenturl'], content=item['content'],
                              fetchtime=item['fetchtime'], contentmd5=item['contentmd5'],
                              contenttype=item['contenttype'], prevfetchtime=item['prevfetchtime'],
-                             domain_name=item['domain_name'], page_title=item['page_title']))
+                             domain_name=item['domain_name'], page_title=item['page_title'],
+                             page_body=item['page_body']))
             else:
                 if not self.session.query(exists().where(PageInfo.contentmd5 == item['contentmd5'])).scalar():
                     # 数据存在，更新操作
                     self.session.query(PageInfo).filter(PageInfo.contentmd5 == item['contentmd5']).update(
                         {'content': item['content'], 'contentmd5': item['contentmd5'], 'contenttype': item['contenttype'],
-                         'page_title': item['page_title'], 'fetchtime': item['fetchtime']
+                         'page_title': item['page_title'], 'fetchtime': item['fetchtime'], 'page_body': item['page_body']
                          }
                     )
             self.session.commit()
