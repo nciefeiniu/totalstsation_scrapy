@@ -16,6 +16,7 @@ function main(splash, args)
     body=splash.args.body,
     })
   assert(splash:wait(2))
+  splash.scroll_position = {x=0, y=20000}
   return splash:html()
 end
 """
@@ -40,6 +41,7 @@ def js_click_function(jsfunc):
       ok, reason = splash:autoload("https://code.jquery.com/jquery-2.1.3.min.js")
       assert(splash:go(args.url))
       assert(splash:wait(args.wait))
+      splash.scroll_position = {{x=0, y=20000}}
       local click_a = splash:jsfunc([[
         function() {{
             try{{
