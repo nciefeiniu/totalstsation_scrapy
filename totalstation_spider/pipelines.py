@@ -15,24 +15,25 @@ class TotalstationSpiderPipeline(object):
 
     def process_item(self, item, spider):
         try:
-            if 'gov.cn' not in item['currenturl']:
-                return
+
             existence = self.session.query(
-                exists().where(PageInfo.currenturl==item['currenturl'])
+                exists().where(PageInfo.currenturl == item['currenturl'])
             ).scalar()
             if not existence:
                 # 不存在
                 self.session.add(
-                    PageInfo(baseurl=item['baseurl'], currenturl=item['currenturl'], content=item['content'], fetchtime=item['fetchtime'],
-                             contentmd5=item['contentmd5'], contenttype=item['contenttype'], prevfetchtime=item['prevfetchtime'],
+                    PageInfo(baseurl=item['baseurl'], currenturl=item['currenturl'], content=item['content'],
+                             fetchtime=item['fetchtime'], contentmd5=item['contentmd5'],
+                             contenttype=item['contenttype'], prevfetchtime=item['prevfetchtime'],
                              domain_name=item['domain_name'], page_title=item['page_title']))
             else:
-                # 数据存在，更新操作
-                self.session.query(PageInfo).filter(PageInfo.contentmd5 == item['contentmd5']).update(
-                    {'content': item['content'], 'contentmd5': item['contentmd5'], 'contenttype': item['contenttype'],
-                     'page_title': item['page_title'], 'fetchtime': item['fetchtime']
-                     }
-                )
+                if not self.session.query(exists().where(PageInfo.contentmd5 == item['contentmd5'])).scalar():
+                    # 数据存在，更新操作
+                    self.session.query(PageInfo).filter(PageInfo.contentmd5 == item['contentmd5']).update(
+                        {'content': item['content'], 'contentmd5': item['contentmd5'], 'contenttype': item['contenttype'],
+                         'page_title': item['page_title'], 'fetchtime': item['fetchtime']
+                         }
+                    )
             self.session.commit()
         except Exception as e:
             print(e)
