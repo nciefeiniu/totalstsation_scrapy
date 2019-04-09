@@ -5,10 +5,83 @@
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
+import logging
+
+from fake_useragent import UserAgent
 from scrapy import signals
+from scrapy.downloadermiddlewares.retry import RetryMiddleware
+from scrapy.utils.python import global_object_name
+
+logger = logging.getLogger(__name__)
 
 
-class TotalSpiderSpiderMiddleware(object):
+# 随机请求头
+class RandomUserAgentMiddleware(object):
+    def __init__(self):
+        self.ua = UserAgent(verify_ssl=False)
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        # This method is used by Scrapy to create your spiders.
+        s = cls()
+        crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
+        return s
+
+    def process_request(self, request, spider):
+        # 随机请求头
+        def get_ua():
+            return self.ua.random
+
+        request.headers.setdefault('User-Agent', get_ua())
+
+    def spider_opened(self, spider):
+        spider.logger.info('Spider opened: %s' % spider.name)
+
+
+# 重试，会使用proxy，这是继承了RetryMiddleware，主要就是添加代理服务器
+class LocalRetryMiddleware(RetryMiddleware):
+
+    def __init__(self, settings):
+        super(LocalRetryMiddleware, self).__init__(settings)
+        self.proxy_server = settings.get('PROXY_SERVER')
+
+    def _retry(self, request, reason, spider):
+        retries = request.meta.get('retry_times', 0) + 1
+
+        retry_times = self.max_retry_times
+
+        if 'max_retry_times' in request.meta:
+            retry_times = request.meta['max_retry_times']
+
+        stats = spider.crawler.stats
+        if retries <= retry_times:
+            logger.debug("Retrying %(request)s (failed %(retries)d times): %(reason)s",
+                         {'request': request, 'retries': retries, 'reason': reason},
+                         extra={'spider': spider})
+            retryreq = request.copy()
+            retryreq.meta['retry_times'] = retries
+            retryreq.dont_filter = True
+            retryreq.priority = request.priority + self.priority_adjust
+
+            if isinstance(reason, Exception):
+                reason = global_object_name(reason.__class__)
+
+            stats.inc_value('retry/count')
+            stats.inc_value('retry/reason_count/%s' % reason)
+
+            # 添加代理服务器功能
+            if self.proxy_server:
+                retryreq.meta['splash']['args']['proxy'] = self.proxy_server
+
+            return retryreq
+        else:
+            stats.inc_value('retry/max_reached')
+            logger.debug("Gave up retrying %(request)s (failed %(retries)d times): %(reason)s",
+                         {'request': request, 'retries': retries, 'reason': reason},
+                         extra={'spider': spider})
+
+
+class TotalstationSpiderSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
     # passed objects.
@@ -56,7 +129,7 @@ class TotalSpiderSpiderMiddleware(object):
         spider.logger.info('Spider opened: %s' % spider.name)
 
 
-class TotalSpiderDownloaderMiddleware(object):
+class TotalstationSpiderDownloaderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
