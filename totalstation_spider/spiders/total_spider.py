@@ -32,18 +32,14 @@ class TotalSpider(SplashRedisCrawlSpider):
 
     # 重写父类的start_requests方法，修改为用SplashRequest发起请求
     def start_requests(self):
-        for url in self.start_urls:
-            # if 'gov.cn' in url:
-                # headers = get_headers()
-            yield SplashRequest(url=url, callback=self.parse_m, endpoint='execute', dont_filter=True,
-                                args={'url': url, 'wait': 5, 'lua_source': default_script}
-                                )
-    #
-    # def make_requests_from_url(self, url):
-    #     """ This method is deprecated. """
-    #     return SplashRequest(url=url, callback=self.parse_m, endpoint='execute', dont_filter=True,
-    #                          args={'url': url, 'wait': 5, 'lua_source': default_script}
-    #                          )
+        """Returns a batch of start requests from redis."""
+        return self.next_requests()
+
+    def make_requests_from_url(self, url):
+        """ This method is deprecated. """
+        return SplashRequest(url=url, callback=self.parse_m, endpoint='execute', dont_filter=True,
+                             args={'url': url, 'wait': 5, 'lua_source': default_script}
+                             )
 
     def _re_request(self, url, jsfunc=None, all_a=None):
         # 需要再次请求的方法，可选是否增加点击事件

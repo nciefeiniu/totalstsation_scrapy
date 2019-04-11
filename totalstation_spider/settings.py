@@ -26,8 +26,11 @@ SCHEDULER = "scrapy_redis.scheduler.Scheduler"
 # TODO 这里是该留用scrapy_redis的去重还是scrapy_splash的去重，暂时去掉去重功能
 # scrapy_redis去重
 DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
+
 # scrapy_splash去重
 # DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
+
+SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.FifoQueue'
 
 # SCRAPY-REDIS使用得redis地址
 REDIS_URL = envget('REDIS_URL')
