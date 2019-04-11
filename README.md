@@ -1,4 +1,4 @@
-## 政府网站通用爬虫
+## 网站通用爬虫 scrapy-splash and scrapy-redis
 
 主要框架：
  
