@@ -123,3 +123,6 @@ AUTOTHROTTLE_MAX_DELAY = int(envget('AUTOTHROTTLE_MAX_DELAY'))
 # 日志等级和日志目录
 LOG_LEVEL = 'INFO'
 LOG_FILE = 'scrapy.log'
+
+# 开启自动清理redis中的数据
+SCHEDULER_FLUSH_ON_START = True

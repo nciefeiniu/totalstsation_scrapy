@@ -40,3 +40,4 @@ class SplashRedisCrawlSpider(RedisCrawlSpider):
                           endpoint='execute', headers=headers, args=args)
         r.meta.update(rule=rule, link_text=link.text)
         return r
+
