@@ -21,4 +21,4 @@ RUN apt update && pip3 install -r requirements.txt
 RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 # 运行爬虫
-CMD ["scrapy", "crawl", "totalspider"]
+CMD ["scrapy", "crawl", "ts"]
