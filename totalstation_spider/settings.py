@@ -23,6 +23,9 @@ NEWSPIDER_MODULE = 'totalstation_spider.spiders'
 # scrapy_redis调度器
 SCHEDULER = "scrapy_redis.scheduler.Scheduler"
 
+# 广度优先
+SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.FifoQueue'
+
 # TODO 这里是该留用scrapy_redis的去重还是scrapy_splash的去重，暂时去掉去重功能
 # scrapy_redis去重
 DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
