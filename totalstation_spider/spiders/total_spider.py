@@ -1,4 +1,4 @@
-#!/usr/bin/env python 
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # 这个才是最新版！！！不用ts_spider
 
@@ -30,13 +30,6 @@ class TotalSpider(SplashRedisCrawlSpider):
         Rule(link_extractor=LinkExtractor(), process_links=default_process_link, callback='parse_m', follow=True),
     )
 
-    # # 重写父类的start_requests方法，修改为用SplashRequest发起请求
-    # def start_requests(self):
-    #     for url in self.start_urls:
-    #         yield SplashRequest(url=url, callback=self.parse_m, endpoint='execute', dont_filter=True,
-    #                             args={'url': url, 'wait': 5, 'lua_source': default_script}
-    #                             )
-
     def make_requests_from_url(self, url):
         """ This method is deprecated. """
         return SplashRequest(url=url, callback=self.parse_m, endpoint='execute', dont_filter=True,
@@ -48,10 +41,10 @@ class TotalSpider(SplashRedisCrawlSpider):
         # 携带点击事件的再次请求，meta增加baseurl，防止点击事件跳转到其他域名,meta中增加click标签，解析有这个就不再执行模拟点击！
         return SplashRequest(url=url, callback=self.parse_click, endpoint='execute', dont_filter=True,
                              args={'url': url, 'wait': 5, 'lua_source': js_click_function(jsfunc)},
-                              meta={'baseurl': url, 'click': True}
+                             meta={'baseurl': url, 'click': True}
                              )
 
-    def _re_request_next_page(self, url, md_5: str, script: str=None):
+    def _re_request_next_page(self, url, md_5: str, script: str = None):
         # 点击下一页的请求，请求中携带当前页面的md5值，之后好根据这个判断是否还有下一页
         return SplashRequest(url=url, callback=self.parse_nextpage, endpoint='execute', dont_filter=True,
                              args={'url': url, 'wait': 5, 'lua_source': script},
@@ -123,7 +116,7 @@ class TotalSpider(SplashRedisCrawlSpider):
                     yield self._re_request_next_page(response.url, md_5=get_md5(response.body), script=_script)
         else:
             pass
-            # TODO 跳转到了新页面
+            # TODO 跳转到了新页面(还需考虑这个页面是否市政府或者环保部的页面，是否丢弃)，
             # TODO 考虑是否可以把这个url加入到redis中！直接再交给parse_m来处理，有可能造成递归栈溢出，还有什么好方法能解决这个问题?
 
     def parse_nextpage(self, response):
@@ -144,7 +137,8 @@ class TotalSpider(SplashRedisCrawlSpider):
         # yield self.save_info(response)
 
         # 再次请求，点击下一页
-        yield self._re_request_next_page(url=response.url, md_5=get_md5(response.body), script=response.meta['jsfunc'])
+        yield self._re_request_next_page(url=response.url, md_5=get_md5(response.body),
+                                         script=response.meta['jsfunc'])
 
     def save_info(self, response, click=False):
 
