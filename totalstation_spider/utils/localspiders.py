@@ -114,9 +114,7 @@ class LocalRedisMixin(object):
 
         """
         url = bytes_to_str(data, self.redis_encoding)
-        return SplashRequest(url=url, callback=self.parse_m, endpoint='execute', dont_filter=True,
-                             args={'url': url, 'wait': 5, 'lua_source': default_script}
-                             )
+        return self.make_requests_from_url(url)
 
     def schedule_next_requests(self):
         """Schedules a request if available"""
