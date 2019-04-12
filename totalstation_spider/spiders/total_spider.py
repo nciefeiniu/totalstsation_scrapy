@@ -13,7 +13,7 @@ from scrapy.spiders import Rule
 from scrapy_splash import SplashRequest
 
 from ..utils import LocalRedisCrawlSpider
-from ..utils import default_process_link, default_script, js_click_function
+from ..utils import default_process_link, js_click_function
 from ..utils import get_md5
 
 # 修改递归上限
@@ -48,6 +48,8 @@ class TotalSpider(LocalRedisCrawlSpider):
     next_pattern_contain = re.compile(r'([下后]\s*一?\s*页\s*>*)|(\s?>{2}\s?)|(^\s*>+\s*$)')
 
     def parse_m(self, response):
+        print(response.url)
+        return
         # 这是不带点击的回调
 
         # 保存当前页面的信息, items

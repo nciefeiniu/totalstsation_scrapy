@@ -4,6 +4,7 @@
 from scrapy import signals
 
 from scrapy_redis import connection, defaults
+from scrapy.exceptions import DontCloseSpider
 from scrapy_redis.utils import bytes_to_str
 
 from scrapy_splash import SplashRequest
@@ -116,6 +117,18 @@ class LocalRedisMixin(object):
         return SplashRequest(url=url, callback=self.parse_m, endpoint='execute', dont_filter=True,
                              args={'url': url, 'wait': 5, 'lua_source': default_script}
                              )
+
+    def schedule_next_requests(self):
+        """Schedules a request if available"""
+        # TODO: While there is capacity, schedule a batch of redis requests.
+        for req in self.next_requests():
+            self.crawler.engine.crawl(req, spider=self)
+
+    def spider_idle(self):
+        """Schedules a request if available, otherwise waits."""
+        # XXX: Handle a sentinel to close the spider.
+        self.schedule_next_requests()
+        raise DontCloseSpider
 
 
 class LocalRedisCrawlSpider(LocalRedisMixin, LocalCrawlSpider):
