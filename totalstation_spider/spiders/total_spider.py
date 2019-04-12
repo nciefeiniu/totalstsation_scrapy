@@ -21,7 +21,7 @@ sys.setrecursionlimit(100000)
 
 
 class TotalSpider(SplashRedisCrawlSpider):
-    name = 'totalspider'
+    name = 'ts'
 
     redis_key = 'waiting_for_crawl:start_urls'
 
