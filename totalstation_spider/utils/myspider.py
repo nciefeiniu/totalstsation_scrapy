@@ -12,6 +12,12 @@ from ..utils import get_headers
 
 class SplashRedisCrawlSpider(RedisCrawlSpider):
 
+    @classmethod
+    def from_crawler(self, crawler, *args, **kwargs):
+        _spider = super(SplashRedisCrawlSpider, self).from_crawler(crawler, *args, **kwargs)
+        # obj.setup_redis(crawler)
+        return _spider
+
     # 重写CrawlSpider 的这个方法
     def _requests_to_follow(self, response):
         if not isinstance(response, (HtmlResponse, SplashJsonResponse, SplashTextResponse, SplashResponse)):

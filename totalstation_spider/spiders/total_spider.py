@@ -30,10 +30,10 @@ class TotalSpider(SplashRedisCrawlSpider):
         Rule(link_extractor=LinkExtractor(), process_links=default_process_link, callback='parse_m', follow=True),
     )
 
-    # 重写父类的start_requests方法，修改为用SplashRequest发起请求
-    def start_requests(self):
-        """Returns a batch of start requests from redis."""
-        return self.next_requests()
+    # # 重写父类的start_requests方法，修改为用SplashRequest发起请求
+    # def start_requests(self):
+    #     """Returns a batch of start requests from redis."""
+    #     return self.next_requests()
 
     def make_requests_from_url(self, url):
         """ This method is deprecated. """
