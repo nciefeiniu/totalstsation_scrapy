@@ -128,5 +128,5 @@ AUTOTHROTTLE_MAX_DELAY = int(envget('AUTOTHROTTLE_MAX_DELAY'))
 
 # 日志等级和日志目录
 if envget('PRODUCT_ENV') == 'True':
-    LOG_LEVEL = 'DEBUG'
+    LOG_LEVEL = 'WARNING'
     LOG_FILE = 'scrapy.log'
