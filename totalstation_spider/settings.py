@@ -124,5 +124,6 @@ AUTOTHROTTLE_START_DELAY = int(envget('AUTOTHROTTLE_START_DELAY'))
 AUTOTHROTTLE_MAX_DELAY = int(envget('AUTOTHROTTLE_MAX_DELAY'))
 
 # 日志等级和日志目录
-LOG_LEVEL = 'DEBUG'
-LOG_FILE = 'scrapy.log'
+if envget('PRODUCT_ENV') == 'True':
+    LOG_LEVEL = 'DEBUG'
+    LOG_FILE = 'scrapy.log'
