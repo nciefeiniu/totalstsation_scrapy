@@ -1,5 +1,7 @@
 ## 网站通用爬虫 scrapy-splash and scrapy-redis
 
+**发现RedisCrawlSpider并未正常运行，还未找到问题所在！**
+
 主要框架：
  
  - scrapy
