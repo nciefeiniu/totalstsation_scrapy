@@ -13,8 +13,8 @@ from ..utils import get_headers
 class SplashRedisCrawlSpider(RedisCrawlSpider):
 
     @classmethod
-    def from_crawler(self, crawler, *args, **kwargs):
-        _spider = super(SplashRedisCrawlSpider, self).from_crawler(crawler, *args, **kwargs)
+    def from_crawler(cls, crawler, *args, **kwargs):
+        _spider = super(SplashRedisCrawlSpider, cls).from_crawler(crawler, *args, **kwargs)
         # obj.setup_redis(crawler)
         return _spider
 
