@@ -30,11 +30,6 @@ class TotalSpider(SplashRedisCrawlSpider):
         Rule(link_extractor=LinkExtractor(), process_links=default_process_link, callback='parse_m', follow=True),
     )
 
-    # # 重写父类的start_requests方法，修改为用SplashRequest发起请求
-    # def start_requests(self):
-    #     """Returns a batch of start requests from redis."""
-    #     return self.next_requests()
-
     def make_requests_from_url(self, url):
         """ This method is deprecated. """
         return SplashRequest(url=url, callback=self.parse_m, endpoint='execute', dont_filter=True,
@@ -43,7 +38,6 @@ class TotalSpider(SplashRedisCrawlSpider):
 
     def _re_request(self, url, jsfunc=None, all_a=None):
         # 需要再次请求的方法，可选是否增加点击事件
-        # _headers = get_headers().update({'Referer': url})
         # 携带点击事件的再次请求，meta增加baseurl，防止点击事件跳转到其他域名,meta中增加click标签，解析有这个就不再执行模拟点击！
         return SplashRequest(url=url, callback=self.parse_click, endpoint='execute', dont_filter=True,
                              args={'url': url, 'wait': 5, 'lua_source': js_click_function(jsfunc)},
@@ -52,15 +46,12 @@ class TotalSpider(SplashRedisCrawlSpider):
 
     def _re_request_next_page(self, url, md_5: str, script: str=None):
         # 点击下一页的请求，请求中携带当前页面的md5值，之后好根据这个判断是否还有下一页
-        # _headers = get_headers().update({'Referer': url})
         return SplashRequest(url=url, callback=self.parse_nextpage, endpoint='execute', dont_filter=True,
                              args={'url': url, 'wait': 5, 'lua_source': script},
                              meta={'nextpage': True, 'md5': md_5, 'jsfunc': script})
 
     # TODO 这个下一页的规则还要增加
     next_pattern_contain = re.compile(r'([下后]\s*一?\s*页\s*>*)|(\s?>{2}\s?)|(^\s*>+\s*$)')
-    # ly_next_pattern_contain = re.compile(r'(\s?>{2}\s?)')
-    # next_pattern_equal = re.compile(r'(^\s*>+\s*$)')
 
     def parse_m(self, response):
         # 这是不带点击的回调
@@ -100,9 +91,6 @@ class TotalSpider(SplashRedisCrawlSpider):
         if urlparse(response.url).netloc != urlparse(response.meta['baseurl']).netloc:
             return
 
-        # 保存当前页面的信息, items
-        # yield self.save_info(response)
-
         # 这是带点击事件请求的回调
         _bae_url = response.meta['baseurl']
         if _bae_url == response.url:
@@ -141,9 +129,6 @@ class TotalSpider(SplashRedisCrawlSpider):
 
         if get_md5(response.body) == response.meta['md5']:
             return
-
-        # 保存信息
-        # yield self.save_info(response)
 
         # 再次请求，点击下一页
         yield self._re_request_next_page(url=response.url, md_5=get_md5(response.body), script=response.meta['jsfunc'])

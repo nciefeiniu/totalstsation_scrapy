@@ -30,6 +30,8 @@ DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
 # scrapy_splash去重
 # DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
 
+SCHEDULER_PERSIST = True
+
 SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.FifoQueue'
 
 # SCRAPY-REDIS使用得redis地址
