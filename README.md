@@ -1,6 +1,12 @@
 ## 网站通用爬虫 scrapy-splash and scrapy-redis
 
-    **发现RedisCrawlSpider并未正常运行，还未找到问题所在！**
+    **
+        发现RedisCrawlSpider并未正常运行，还未找到问题所在！
+        找到错位的位置，不能重写 make_requests_from_url(self, url)
+        为 SplashRequest，重写为SplashRequest，CrawlSpider将不能正常运行
+        还在查找解决方案
+        
+    **
 
 主要框架：
  
