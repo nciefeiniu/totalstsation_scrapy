@@ -55,15 +55,15 @@ class TotalSpider(SplashRedisCrawlSpider):
 
         # 找出需要点击的地方，这里会转换为jquery的方式在splash中运行
         soup = BS(response.text, 'lxml')
-        a_javascript = soup.find_all('a', href=re.compile(r'^javascript'))
-        a_sharp = soup.find_all('a', href=re.compile(r'^#'))
-        _all_a = a_javascript + a_sharp
-        for _i in range(len(a_javascript)):
-            _jsfunc = """$("a[href^='javascript']")[{0}].click();""".format(_i)
-            yield self._re_request(response.url, _jsfunc, _all_a)
-        for _ai in range(len(a_sharp)):
-            _jsfunc = """$("a[href^='#']")[{0}].click();""".format(_ai)
-            yield self._re_request(response.url, _jsfunc, _all_a)
+        # a_javascript = soup.find_all('a', href=re.compile(r'^javascript'))
+        # a_sharp = soup.find_all('a', href=re.compile(r'^#'))
+        # _all_a = a_javascript + a_sharp
+        # for _i in range(len(a_javascript)):
+        #     _jsfunc = """$("a[href^='javascript']")[{0}].click();""".format(_i)
+        #     yield self._re_request(response.url, _jsfunc, _all_a)
+        # for _ai in range(len(a_sharp)):
+        #     _jsfunc = """$("a[href^='#']")[{0}].click();""".format(_ai)
+        #     yield self._re_request(response.url, _jsfunc, _all_a)
 
         # TODO 点击ajax请求的下一页，这里采用的选出所有a标签，再根据第几个标签是 下一页按钮   来转换为jquery能识别的代码，进行模拟点击。   还有其他好的方法？
         _nextpages_javascrpit = soup.find_all('a', href=re.compile('^javascript'))

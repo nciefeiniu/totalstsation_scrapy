@@ -30,7 +30,7 @@ class TotalstationSpiderPipeline(object):
             else:
                 if not self.session.query(exists().where(PageInfo.contentmd5 == item['contentmd5'])).scalar():
                     # 数据存在，更新操作
-                    self.session.query(PageInfo).filter(PageInfo.contentmd5 == item['contentmd5']).update(
+                    self.session.query(PageInfo).filter(PageInfo.currenturl == item['currenturl']).update(
                         {'content': item['content'], 'contentmd5': item['contentmd5'], 'contenttype': item['contenttype'],
                          'page_title': item['page_title'], 'fetchtime': item['fetchtime'], 'page_body': item['page_body']
                          }
