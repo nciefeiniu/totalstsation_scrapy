@@ -1,7 +1,7 @@
 #!/usr/bin/env python 
 # -*- coding: utf-8 -*-
 
-from scrapy.http import HtmlResponse
+from scrapy.http import HtmlResponse, Request
 from scrapy_redis.spiders import RedisCrawlSpider
 from scrapy_splash import SplashJsonResponse, SplashTextResponse, SplashResponse
 from scrapy_splash import SplashRequest
@@ -9,13 +9,22 @@ from ..utils import default_script
 
 from ..utils import get_headers
 
+import six
+
+
+def bytes_to_str(s, encoding='utf-8'):
+    """Returns a str if a bytes object is given."""
+    if six.PY3 and isinstance(s, bytes):
+        return s.decode(encoding)
+    return s
+
 
 class SplashRedisCrawlSpider(RedisCrawlSpider):
 
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
         _spider = super(SplashRedisCrawlSpider, cls).from_crawler(crawler, *args, **kwargs)
-        # obj.setup_redis(crawler)
+        _spider.setup_redis(crawler)
         return _spider
 
     # 重写CrawlSpider 的这个方法
@@ -31,6 +40,10 @@ class SplashRedisCrawlSpider(RedisCrawlSpider):
                 links = rule.process_links(links, response.url)
             for link in links:
                 seen.add(link)
+                # 去掉本地链接
+                if link.url.startswith(r'http://127.0.0.1'):
+                    continue
+                # print('当前链接：' + link.url)
                 r = self._build_request(n, link)
                 yield rule.process_request(r)
 
@@ -47,3 +60,11 @@ class SplashRedisCrawlSpider(RedisCrawlSpider):
         r.meta.update(rule=rule, link_text=link.text)
         return r
 
+    # 这是给起始url的请求，修改为用splash来进行
+    def make_request_from_data(self, data):
+        headers = get_headers()
+        # 这是必须的
+        headers['Content-Type'] = 'application/json'
+        url = bytes_to_str(data, self.redis_encoding)
+        # 这里不要添加回调函数，添加了就会导致全站爬去爬虫失效
+        return SplashRequest(url=url, headers=headers, dont_filter=True, args={'wait': 1})

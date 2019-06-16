@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# 这个才是最新版！！！不用ts_spider
 
 import re
 import sys
@@ -35,7 +34,7 @@ class TotalSpider(SplashRedisCrawlSpider):
         # 携带点击事件的再次请求，meta增加baseurl，防止点击事件跳转到其他域名,meta中增加click标签，解析有这个就不再执行模拟点击！
         return SplashRequest(url=url, callback=self.parse_click, endpoint='execute', dont_filter=True,
                              args={'url': url, 'wait': 5, 'lua_source': js_click_function(jsfunc)},
-                              meta={'baseurl': url, 'click': True}
+                             meta={'baseurl': url, 'click': True}
                              )
 
     def _re_request_next_page(self, url, md_5: str, script: str=None):
