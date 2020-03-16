@@ -108,3 +108,9 @@ lpush waiting_for_crawl:start_urls http://www.gov.cn
 ```
 
 爬虫已经开始全站爬取。
+
+#### TODO
+
+- [ ] 网页返回数据去重复
+- [ ] 网页相似度检测
+- [ ] 监测网页更新
