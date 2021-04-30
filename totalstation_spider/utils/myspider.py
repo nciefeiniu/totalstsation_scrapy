@@ -45,7 +45,7 @@ class SplashRedisCrawlSpider(RedisCrawlSpider):
                     continue
                 # print('当前链接：' + link.url)
                 r = self._build_request(n, link)
-                yield rule.process_request(r)
+                yield rule.process_request(r,response)
 
     def _build_request(self, rule, link):
         # 重要！！！！！这里重写父类方法，特别注意，需要传递meta={'rule': rule, 'link_text': link.text}
@@ -55,7 +55,7 @@ class SplashRedisCrawlSpider(RedisCrawlSpider):
         meta = {'rule': rule, 'link_text': link.text}
         # TODO args 考虑是否需要修改，这里的wait是否需要根据环境变量来获取
         args = {'wait': 5, 'url': link.url, 'lua_source': default_script}
-        r = SplashRequest(url=link.url, callback=self._response_downloaded, meta=meta, splash_headers=headers,
+        r = SplashRequest(url=link.url, callback=self._callback, meta=meta, splash_headers=headers,
                           endpoint='execute', headers=headers, args=args)
         r.meta.update(rule=rule, link_text=link.text)
         return r
