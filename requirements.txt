@@ -1,4 +1,4 @@
-scrapy==1.6.0
+scrapy==2.6.1
 scrapy-redis==0.6.8
 scrapy-splash==0.7.2
 beautifulsoup4==4.7.1
